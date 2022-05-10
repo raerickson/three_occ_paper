@@ -1,0 +1,935 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Combining biology and statistical hierarchicies with occpuancy models to account for imperfect detection of single and multiple species with two- and three-level occpuancy models},
+  pdfauthor={Richard A. Erickson, 0000-0003-4649-482X, rerickson@usgs.gov; Barb A. Bennie; Laura Pederman 0000-0001-6976-4138; Kevin's student for her data?; Steven Spear; Kevin Lafferty 0000-0001-7583-4593},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\usepackage{setspace}\doublespacing \usepackage{lineno} \linenumbers
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Combining biology and statistical hierarchicies with occpuancy
+models to account for imperfect detection of single and multiple species
+with two- and three-level occpuancy models}
+\author{Richard A. Erickson, 0000-0003-4649-482X,
+\href{mailto:rerickson@usgs.gov}{\nolinkurl{rerickson@usgs.gov}} \and Barb
+A. Bennie \and Laura Pederman 0000-0001-6976-4138 \and Kevin's student
+for her data? \and Steven Spear \and Kevin Lafferty 0000-0001-7583-4593}
+\date{10 May 2022}
+
+\begin{document}
+\maketitle
+
+\textbf{This draft manuscript is distributed solely for purposes of
+scientific peer review. Its content is deliberative and predecisional,
+so it must not be disclosed or released by reviewers. Because the
+manuscript has not yet been approved for publication by the U.S.
+Geological Survey (USGS), it does not represent any official USGS
+finding or policy.}
+
+\hypertarget{abstract}{%
+\section{Abstract}\label{abstract}}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\begin{itemize}
+\item
+  Problem of imperfect detection
+
+  \begin{itemize}
+  \tightlist
+  \item
+    May miss seeing a species due to low detection
+  \item
+    Occupancy models allow for imperfect detection to modeled and
+    account for zero-inflation (MacKenzie \emph{et al.} 2017)
+  \item
+    Large application in ecological theory and practices, with text
+    books written on the topic (e.g., Royle \& Dorazio 2008; MacKenzie
+    \emph{et al.} 2017)
+  \end{itemize}
+\item
+  Multi-species models allow for the co-occurrence of species to be
+  modeled.
+
+  \begin{itemize}
+  \item
+    Species often best predictors of other species
+  \item
+    Lack environmental predictor variables
+  \item
+    Tobler \emph{et al.} (2019) describe deriving two methods for
+    deriving multi-species models
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Join species distribution models based upon an extension of the
+      regression framework used for single species models, starting with
+      Dorazio \& Royle (2005a).
+    \item
+      Multi-species models that stack together single species models by
+      explicit capturing pair-wise correlations starting with Latimer
+      \emph{et al.} (2009)
+    \item
+      Tobler \emph{et al.} (2019) present a framework for estimating
+      species co-occurrence (or correlation of occupancy) through the
+      use of latent variables.
+    \end{itemize}
+  \end{itemize}
+\item
+  we expand upon the notation of Royle \& Dorazio (2008) to incorporate
+  occupancy models into a statistical hierarchical modeling framework.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Bridges statistical hierarchical models such as those covered in
+    Gelman \& Hill (2006) with the biological hierarchy captured
+    described by Royle \& Dorazio (2008).
+  \item
+    Directly building upon Tobler \emph{et al.} (2019) because we
+    directly estimate correlation without latent variables
+  \item
+    Expand to include not only correlated site-level occupancy, but also
+    detection probabilities
+  \item
+    Show how model may be extended to three-level models that account
+    for sub-sampling, following Dorazio \& Erickson (2018) and their
+    style application to eDNA.
+  \end{itemize}
+\item
+  Motivating
+
+  \begin{itemize}
+  \tightlist
+  \item
+    2-level, motivation for Correlations among detection of parasites
+    when detection probs correlated across hosts
+  \item
+    3-level motivated by eDNA monitoring program, where we have
+    site-revisits and care about sampling probabilities changing through
+    time for single species
+  \item
+    3-level community analysis for metabarcoding
+  \item
+    require scaleable computing, recently possibly with advances in the
+    Stan language that allow for within chain parallel computing for
+    HMC.
+  \end{itemize}
+\item
+  purpose and overview of this paper
+
+  \begin{itemize}
+  \tightlist
+  \item
+    present models
+  \item
+    numeric implementation
+  \item
+    application to example studies
+  \item
+    future works
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{models}{%
+\section{Models}\label{models}}
+
+\hypertarget{basic-2-level-model}{%
+\subsection{Basic 2-level model}\label{basic-2-level-model}}
+
+\begin{itemize}
+\item
+  Dorazio--Royle multispecies occupancy model (Dorazio \& Royle 2005b),
+\item
+  using similar notation as (Dorazio \& Erickson 2018) because we
+  generalize the model to include eDNA.
+\item
+  Hierarchical model based upon Gelman \& Hill (2006), described in Stan
+  Development Team (2022) \S 1.13 and similar to the implementation in
+  the \texttt{fishStan} package (Erickson \emph{et al.} 2020; Erickson
+  \emph{et al.} 2022)
+\item
+  Start by presenting basic models, without formal indexing until we get
+  the final model.
+\item
+  Observed unit is occupied (\(Z = 1\)) or not occupied (\(Z = 0\))
+\item
+  Probability of a unit occupied is \(\psi\)
+\item
+  \textbf{Is species at site?}
+\end{itemize}
+
+\begin{align}
+Z &\sim \textrm{Bernoulli}(\psi)
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Was species detected during visit?}
+\item
+  \(Y\) is detection (1) or non-detection (0)
+\item
+  the lower case \(z\) is the realized value for \(Z\)
+\item
+  \(k\) is number of repeated samples per site
+\item
+  \(p\) is probability of detection conditional that the species was
+  located at the site (i.e., \(z = 1\)).
+\end{itemize}
+
+\begin{align}
+Y | z &\sim \textrm{Binomail}(k, z \times p)
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  This model may be expanded to include regression coefficients.
+\item
+  We use logit scale, other common choice is probit scale (e.g., Dorazio
+  \& Erickson 2018).
+\item
+  Both similar, logit has slightly wider tails to the distribution
+  (Finney 1952), and works more efficiently with Stan due to build in
+  and optimized functions.
+\end{itemize}
+
+\begin{align}
+\textrm{logit}(\psi) &= \mu_{\psi} \\
+\textrm{logit}(p)  &=  \mu_{p}
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Can regressors with \(\mu\)s
+\item
+  Predictor matrices \(X\) and \(V\) as well a regression coefficients
+  \(\beta\) and \(\delta\), that can include an error term:
+\end{itemize}
+
+\begin{align}
+\mu_{\psi} & \sim X \beta \\
+\mu_{p} & \sim V \delta
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We can assume both \(\beta\) and \(\delta\) come from a multivariate
+  normal distribution:
+\item
+  Hierarchical model, adapting notation of Stan Development Team (2022)
+  to use use a star symbol (\(^\star\)) for the second level hierarchy
+  avoid confusion with too many parameters (i.e., the biology hierarchy
+  crossed with the statistical hierarchy).
+\item
+  \(\Sigma\) are correlated error terms
+\end{itemize}
+
+\begin{align}
+\beta  & \sim \textrm{multivariate normal}(X^\star \beta^\star, \Sigma_{\psi}) \\
+\delta & \sim \textrm{multivariate normal}(V^\star \delta^\star, \Sigma_{p})
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We present two models for both computational efficiency and
+  statistcial identifiability, specifcially one model with
+  \(\Sigma_{p}\) and one model without \(\Sigma_{p}\).
+\item
+  The and correlation matrices \(\Omega_\psi\) and \(\Omega_p\) are
+  proportional to the covariance matrices, \(\Sigma_\psi\) and
+  \(\Sigma_p\):
+\end{itemize}
+
+\begin{align}
+\Omega_{\psi_{i,j}} &\propto \Sigma_{\psi_{i,j}}~\textrm{and} \\
+\Omega_{p_{i,j}} &\propto \Sigma_{p_{i,j}}.
+\end{align}
+
+\hypertarget{formal-2-level-definition-and-notations}{%
+\subsection{Formal 2-level definition and
+notations}\label{formal-2-level-definition-and-notations}}
+
+We base our formal nation upon Dorazio \& Erickson (2018) for the
+occupancy model and Stan Development Team (2022) \S 1.13 for the
+hierarchical model. We also include our Stan variable names in
+\texttt{code\ format} because tracking indexing with Stan was a large
+challenge we faced when implementing this model. The model has units
+\(i\) that may a region of interest in spatial, temporal, or both where
+\(i \in 1, 2, \ldots N_\textrm{units}\) (in Stan code, this this
+\texttt{n\_units}). For example, multiple lakes could be visited, the
+same lake could be visited multiple times, or multiple lakes could be
+visited multiple times. The \(i^\textrm{th}\) unit may be occupied
+(\(Z_i = 1\)) or not occupied (\(Z_i = 0\)) with probability \(\psi_i\):
+\begin{align}
+Z &\sim \textrm{Bernoulli}(\psi).
+\end{align}
+
+The \(i^\textrm{th}\) unit has \(k\) samples to the site,
+\(k \in 1, 2, \ldots N_\textrm{revisits}\). \(k\) may be summed for each
+unit and then written as a vector, \(K\) for all units
+(\texttt{k\_samples} that is the same length as the total number of
+observations in the data frame,
+\(N_\textrm{total} or `total_observations`). A sampling event may have a detection (\)Y\_\{i,k\}
+= 1\() or a non-detection (\)\(Y_{i,k} = 0\)). A lowercase \(z_i\)
+denotes the realized occupancy (\(z_i\) = 1) or non-occupancy (\(z_i\) =
+0) at a unit. The observation \(Y_{i,k}\) is conditional upon \(z_i\)
+(denoted with the vertical bar symobol, \(|\)). Lastly, \(p_{i,j}\) is
+the detection probability for the \(k^\textrm{th}\) sample at the
+\(i^\textrm{th}\) unit.
+
+\begin{align}
+Y | z &\sim \textrm{Binomail}(k, z p)
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  This model may be expanded to include regression coefficients.
+\item
+  We use logit scale, other common choice is probit scale (e.g., Dorazio
+  \& Erickson 2018).
+\item
+  Both similar, logit has slightly wider tails to the distribution
+  (Finney 1952), and works more efficiently with Stan due to build in
+  and optimized functions.
+\end{itemize}
+
+\begin{align}
+\textrm{logit}(\psi) &= \mu_{\psi} \\
+\textrm{logit}(p)  &=  \mu_{p}
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Can regressors with \(\mu\)s
+\item
+  Predictor matrices \(X\) and \(V\) as well a regression coefficients
+  \(\beta\) and \(\delta\), that can include an error term:
+\end{itemize}
+
+\begin{align}
+\mu_{\psi} & \sim X \beta \\
+\mu_{p} & \sim V \delta
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We can assume both \(\beta\) and \(\delta\) come from a multivariate
+  normal distribution:
+\item
+  Hierarchical model, adapting notation of Stan Development Team (2022)
+  to use use a star symbol (\(^\star\)) for the second level hierarchy
+  avoid confusion with too many parameters (i.e., the biology hierarchy
+  crossed with the statistical hierarchy).
+\item
+  \(\Sigma\) are correlated error terms
+\end{itemize}
+
+\begin{align}
+\beta  & \sim \textrm{multivariate normal}(X^\star \beta^\star, \Sigma_{\psi}) \\
+\delta & \sim \textrm{multivariate normal}(V^\star \delta^\star, \Sigma_{p})
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We present two models for both computational efficiency and
+  statistical identifiability, specifically one model with
+  \(\Sigma_{p}\) and one model without \(\Sigma_{p}\).
+\item
+  The and correlation matrices \(\Omega_\psi\) and \(\Omega_p\) are
+  proportional to the covariance matrices, \(\Sigma_\psi\) and
+  \(\Sigma_p\):
+\end{itemize}
+
+\begin{align}
+\Omega_{\psi_{i,j}} &\propto \Sigma_{\psi_{i,j}}~\textrm{and} \\
+\Omega_{p_{i,j}} &\propto \Sigma_{p_{i,j}}.
+\end{align}
+
+This may be extended change to the logit scale for numerical stability
+and includes regression coefficients.
+
+\begin{align}
+\textrm{logit}(\psi) &= \mu_{\psi} \\
+\textrm{logit}(p)  &=  \mu_{p} 
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Sampling unit \(j\), which can be time or repeatedly sampled through
+  time or space for \(j \in 1, 2, \ldots N_\textrm{units}\).
+\item
+  indexing vector, \(jj\) that is used with loop over vectors,
+  specifically \(jj_\psi\) and \(jj_p\).
+\item
+  Matrix of coefficients for sampling units \(\beta_\psi\) and
+  \(\delta_p\)
+\item
+  Also, include hyper-parameters based upon syntax of Stan Development
+  Team (2022) \S 1.13
+\end{itemize}
+
+\begin{align}
+\mu_{\psi_{jj[n]}} & \sim X \beta_{jj[n]} \\
+\mu_{p_{jj[n]}} & \sim V \delta_{jj[n]}
+\end{align}
+
+The coefficients then have their own hierarchy of modeling:
+\begin{align}
+\beta_{j}  & \sim \textrm{multivariate normal}(\beta^\star, \Sigma_{\psi}) \\
+\delta_{j} & \sim \textrm{multivariate normal}(\delta^\star, \Sigma_{p}) \\
+\end{align}
+
+The covariance matrices, \(\Sigma_\psi\) and \(\Sigma_p\) are defined in
+terms of coefficient scales \(\tau_\psi\) and \(\tau_p\) and correlation
+matrices \(\Omega_\psi\) and \(\Omega_p\). The coefficient scales are
+defined as \(\tau_\psi = \sqrt{\Sigma_{\psi_{k,k}}}\) and
+\(\tau_p = \sqrt{\Sigma_{p_{k,k}}}\). The correlation matrices are
+defined as \begin{align}
+\Omega_{\psi_{i,j}} &= \frac{\Sigma_{\psi_{i,j}}}{\tau_{\psi_i} \tau_{\psi_j}}~\textrm{and} \\ \Omega_{p_{i,j}} &= \frac{\Sigma_{p_{i,j}}}{\tau_{p_i} \tau_{p_j}}.
+\end{align}
+
+Both \(\beta^\star\) and \(\delta^2\) are given weekly-informative
+priors: \begin{align}
+\beta^\star &\sim \textrm{normal}(0, 2) ~\textrm{and} \\
+\delta^\star &\sim \textrm{normal}(0, 2).
+\end{align}
+
+Likewise, the \(\tau\) parameters are given a weakly informative prior
+from the half-Cauchy distribution:
+
+\begin{align}
+\tau_\psi &\sim \textrm{Cauchy}(0, 2.5) ~ \textrm{contrained by} ~ \tau_\psi > 0 ~ \textrm{and} \\
+\tau_p &\sim \textrm{Cauchy}(0, 2.5) ~ \textrm{contrained by} ~ \tau_p > 0.
+\end{align}
+
+We used Lewandowski, Kurowick, and Joe (LKJ) priors for the for the
+correlation matrices as defined by Lewandowski \emph{et al.} (2009) with
+\(\nu_psi > 1\) and \(\nu_p > 1\)
+
+\begin{align}
+\Sigma_\psi \sim \textrm{LKJCrr}(\nu_\psi) ~ \textrm{and} \\
+\Sigma_p \sim \textrm{LKJCrr}(\nu_p)
+\end{align}
+
+Notes about indexing
+
+\begin{itemize}
+\tightlist
+\item
+  The two-levels become confusing, often the same by coincidence.
+\item
+  Especially for \(\psi\)-level parameters and \(p^\star\)-level
+  parameters
+\item
+  Important to think about groupings, often have problems when we were
+  coding
+\end{itemize}
+
+\hypertarget{formal-3-level-model}{%
+\subsection{Formal 3-level model}\label{formal-3-level-model}}
+
+\begin{itemize}
+\item
+  Includes sub-sampling Mordecai \emph{et al.} (2011)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Based upon Dorazio \& Erickson (2018) for syntax
+  \item
+    Generically, (1) is site occupied? (2) Is species present for site?
+    (3) Did sub-sampling detect the species?
+  \item
+    Within context of eDNA, Three levels (see figure reprinted from
+    Erickson \emph{et al.} (2019)).
+  \item
+    For eDNA (1) Is eDNA at the site? (2) Is eDNA in sample and
+    successfully exacted? and (3) Did molecular tool such as qPCR detect
+    eDNA?
+  \item
+    We insert \(\theta\) for middle-level.
+  \end{itemize}
+\end{itemize}
+
+Like previous section, we base our formal nation upon Dorazio \&
+Erickson (2018) for the occupancy model and Stan Development Team (2022)
+\S 1.13 for the hierarchical model. We also include our Stan variable
+names in \texttt{code\ format} because tracking indexing with Stan was a
+large challenge we faced when implementing this model. The model has
+units \(i\) that may a region of interest in spatial, temporal, or both
+where \(i \in 1, 2, \ldots N_\textrm{units}\) (in Stan code, this this
+\texttt{n\_units}). For example, multiple lakes could be visited, the
+same lake could be visited multiple times, or multiple lakes could be
+visited multiple times. The \(i^\textrm{th}\) unit may be occupied
+(\(Z_i = 1\)) or not occupied (\(Z_i = 0\)) with probability \(\psi_i\):
+
+\begin{align}
+Z_i &\sim \textrm{Bernoulli}(\psi_i).
+\end{align}
+
+The \(i^\textrm{th}\) unit has \(j_i\) samples taken from the site,
+\(j_i \in 1, 2, \ldots N_\textrm{revisits: i}\)
+(\texttt{n\_samples{[}unit\ index{]}}). A lowercase \(z_i\) denotes the
+realized occupancy (\(z_i\) = 1) or non-occupancy (\(z_i\) = 0) at a
+unit (\texttt{any\_seen{[}unit\ index{]}}).
+
+The latent, sample occurrence \(a_{i,j}\) is conditional upon \(z_i\)
+and (denoted with the vertical bar symbol, \(|\)). Lastly,
+\(\theta_{i,j}\) is the sample probability for the \(j^\textrm{th}\)
+sample at the \(i^\textrm{th}\) unit.
+
+\begin{align}
+A_{i,j} | z_i &\sim \textrm{Bernoulli}(z_i \theta)
+\end{align}
+
+A lowercase \(a_{i,j}\) denotes the realized occupancy (\(a_{i,j}\) = 1)
+or non-occupancy (\(a_{i,j}\) = 0) at a sample
+(\texttt{sample\_seen{[}unit\ index{]}}) Within each sample, there are
+\(k_{i,j}\) sub-samples within the unit,
+\(k_{i,j} \in 1, 2, \ldots N_\textrm{subsamples: i, j}\)
+(\texttt{k\_samples}). Each unit may have its own revisits and each
+revisit to a unit may have its own number of subsamples. Hence, there
+are can be subscripted subscripts.
+
+\(k\) may be summed for each unit and then written as a vector, \(K\)
+for all units (\texttt{k\_samples} that is the same length as the total
+number of observations in the data frame, \(N_\textrm{total}\) or
+\texttt{total\_observations}). A sampling event may have a detection
+(\(Y\_{i,j,k} = 1\)) or a non-detection (\(Y_{i,j,k} = 0\)).
+
+The observation \(Y_{i,j,k}\) is conditional upon \(a_{i,j}\) (denoted
+with the vertical bar symbol, \(|\)). Lastly, \(p_{i,j,k}\) is the
+detection probability for the \(k^\textrm{th}\) sub-sample in the
+\(j^\textrm{th}\) sample at the \(i^\textrm{th}\) unit.
+
+\begin{align}
+Y_{i,j,k} | a_{i,j} &\sim \textrm{Binomail}(k_{j,k}, a_{i,j} p_{i,j,k})
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  This model may be expanded to include regression coefficients.
+\item
+  We use logit scale, other common choice is probit scale (e.g., Dorazio
+  \& Erickson 2018).
+\item
+  Both similar, logit has slightly wider tails to the distribution
+  (Finney 1952), and works more efficiently with Stan due to build in
+  and optimized functions.
+\end{itemize}
+
+\begin{align}
+\textrm{logit}(\psi) &= \mu_{\psi} \\
+\textrm{logit}(\theta) &= \mu_{\theta} \\
+\textrm{logit}(p)  &=  \mu_{p}
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Can regressors with \(\mu\)s
+\item
+  Predictor matrices \(X\), \(W\), and \(V\) as well a regression
+  coefficients \(\beta\), \(\alpha\), and \(\delta\), that can include
+  an error term:
+\end{itemize}
+
+\begin{align}
+\mu_{\psi} & \sim X \beta \\
+\mu_{\theta} & \sim W \alpha \\
+\mu_{p} & \sim V \delta
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We can assume \(\beta\), \(\alpha\), and \(\delta\) come from a
+  multivariate normal distribution:
+\item
+  Hierarchical model, adapting notation of Stan Development Team (2022)
+  to use use a star symbol (\(^\star\)) for the second level hierarchy
+  avoid confusion with too many parameters (i.e., the biology hierarchy
+  crossed with the statistical hierarchy).
+\item
+  \(\Sigma\) are correlated error terms
+\end{itemize}
+
+\begin{align}
+\beta  & \sim \textrm{multivariate normal}(X^\star \beta^\star, \Sigma_{\psi}) \\
+\delta & \sim \textrm{multivariate normal}(V^\star \delta^\star, \Sigma_{p})
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  We present two models for both computational efficiency and
+  statistical identifiability, specifically one model with
+  \(\Sigma_{p}\) and one model without \(\Sigma_{p}\).
+\item
+  The and correlation matrices \(\Omega_\psi\) and \(\Omega_p\) are
+  proportional to the covariance matrices, \(\Sigma_\psi\) and
+  \(\Sigma_p\):
+\end{itemize}
+
+\begin{align}
+\Omega_{\psi_{i,j}} &\propto \Sigma_{\psi_{i,j}}~\textrm{and} \\
+\Omega_{p_{i,j}} &\propto \Sigma_{p_{i,j}}.
+\end{align}
+
+This may be extended change to the logit scale for numerical stability
+and includes regression coefficients.
+
+\begin{align}
+\textrm{logit}(\psi) &= \mu_{\psi} \\
+\textrm{logit}(\alpha) &= \mu_{\alpha} \\
+\textrm{logit}(p)  &=  \mu_{p} 
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Sampling unit \(j\), which can be time or repeatedly sampled through
+  time or space for \(j \in 1, 2, \ldots N_\textrm{units}\).
+\item
+  indexing vector, \(jj\) that is used with loop over vectors,
+  specifically \(jj_\psi\), \(jj_\alpha\), and \(jj_p\).
+\item
+  Matrix of coefficients for sampling units \(\beta_\psi\) and
+  \(\delta_p\)
+\item
+  Also, include hyper-parameters based upon syntax of Stan Development
+  Team (2022) \S 1.13
+\end{itemize}
+
+\begin{align}
+\mu_{\psi_{jj[n]}} & \sim X \beta_{jj[n]} \\
+\mu_{\alpha_{jj[n]}} & \sim X \alpha{jj[n]} \\
+\mu_{p_{jj[n]}} & \sim V \delta_{jj[n]}
+\end{align}
+
+The coefficients then have their own hierarchy of modeling:
+\begin{align}
+\beta_{j}  & \sim \textrm{multivariate normal}(\beta^\star, \Sigma_{\psi}) \\
+\alpha{j}  & \sim \textrm{multivariate normal}(\alpha^\star, \Sigma_{\alpha}) \\
+\delta_{j} & \sim \textrm{multivariate normal}(\delta^\star, \Sigma_{p})
+\end{align}
+
+The covariance matrices, \(\Sigma_\psi\), \(\Sigma_\theta\), and
+\(\Sigma_p\) are defined in terms of coefficient scales \(\tau_\psi\),
+\(\tau_\theta\), and \(\tau_p\) and correlation matrices
+\(\Omega_\psi\), \(\Omega_\theta\), and \(\Omega_p\). The coefficient
+scales are defined as \(\tau_\psi = \sqrt{\Sigma_{\psi_{k,k}}}\),
+\(\tau_\theta = \sqrt{\Sigma_{\theta{k,k}}}\), and
+\(\tau_p = \sqrt{\Sigma_{p_{k,k}}}\). The correlation matrices are
+defined as \begin{align}
+\Omega_{\psi_{i,j}} &= \frac{\Sigma_{\psi_{i,j}}}{\tau_{\psi_i} \tau_{\psi_j}}, \\
+\Omega_{\theta{i,j}} &= \frac{\Sigma_{\theta_{i,j}}}{\tau_{\theta_i} \tau_{\theta_i}},~\textrm{and} \\\Omega_{p_{i,j}} &= \frac{\Sigma_{p_{i,j}}}{\tau_{p_i} \tau_{p_j}}.
+\end{align}
+
+Both \(\beta^\star\), \(\alpha^\star\) and \(\delta^star\) are given
+weekly-informative priors: \begin{align}
+\beta^\star &\sim \textrm{normal}(0, 2), \\
+\alpha^\star &\sim \textrm{normal}(0, 2), ~\textrm{and} \\
+\delta^\star &\sim \textrm{normal}(0, 2).
+\end{align}
+
+Likewise, the \(\tau\) parameters are given a weakly informative prior
+from the half-Cauchy distribution:
+
+\begin{align}
+\tau_\psi &\sim \textrm{Cauchy}(0, 2.5) ~ \textrm{contrained by} ~ \tau_\psi > 0, \\
+\tau_\theta &\sim \textrm{Cauchy}(0, 2.5) ~ \textrm{contrained by} ~ \theta\psi > 0,~\textrm{and} \\
+\tau_p &\sim \textrm{Cauchy}(0, 2.5) ~ \textrm{contrained by} ~ \tau_p > 0.
+\end{align}
+
+We used Lewandowski, Kurowick, and Joe (LKJ) priors for the for the
+correlation matrices as defined by Lewandowski \emph{et al.} (2009) with
+\(\nu_psi > 1\), \(\nu_theta > 1\), and \(\nu_p > 1\)
+
+\begin{align}
+\Sigma_\psi \sim \textrm{LKJCrr}(\nu_\psi), \\
+\Sigma_\theta \sim \textrm{LKJCrr}(\nu_\theta), ~ \textrm{and} \\
+\Sigma_p \sim \textrm{LKJCrr}(\nu_p)
+\end{align}
+
+Notes about indexing
+
+\begin{itemize}
+\tightlist
+\item
+  The three-levels become confusing, second statistical-levels can often
+  the same by coincidence.
+\item
+  Especially for \(\psi\)-level parameters and \(\theta^\star\)
+  \(p^\star\)-level parameters
+\item
+  Important to think about groupings, often have problems when we were
+  coding
+\end{itemize}
+
+\hypertarget{numerical-implementation}{%
+\subsection{Numerical implementation}\label{numerical-implementation}}
+
+\begin{itemize}
+\tightlist
+\item
+  Required development version of RStan as of writing, thus we used
+  \texttt{rcmdstan}, specifically because of the \texttt{reduce\_sum()}
+  function did not appear in Stan until version 2.23 and RStan version
+  2.21 was the stable version of RStan. Likewise, \texttt{rcmdstan}
+  allowed us to use bothin within and amoung chain parallelizaiton.
+\item
+  Onion method (Lewandowski \emph{et al.} 2009) because default Stan
+  option LKJ prior method does not scale to large matrices
+\item
+  Within chain parallel requiring more recent versions of Stan than
+  currently \texttt{RStan} version 2.21 (Stan Development Team 2021)
+\item
+  use the \texttt{reduce\_sum()} function, which allows parallel chains
+  to calculate log probability distributions
+\item
+  used Stan version 2.29 (Stan Development Team 2022), which we called
+  through Gabry \& Cesnovar (2022)
+\item
+  Tested using 40 cores on a local server, for test cases 10 cores per
+  thread worked best for our models
+\end{itemize}
+
+\hypertarget{example-applications-of-model}{%
+\section{Example applications of
+model}\label{example-applications-of-model}}
+
+\hypertarget{level-simulated-data}{%
+\subsection{2-level simulated data}\label{level-simulated-data}}
+
+\hypertarget{level-bird-example}{%
+\subsection{2-level bird example}\label{level-bird-example}}
+
+\hypertarget{level-parasite-model}{%
+\subsection{2-level parasite model}\label{level-parasite-model}}
+
+\hypertarget{level-simulated-model}{%
+\subsection{3-level simulated model}\label{level-simulated-model}}
+
+\hypertarget{level-repeated-visits}{%
+\subsection{3-level repeated visits}\label{level-repeated-visits}}
+
+\hypertarget{level-edna-example}{%
+\subsection{3-level eDNA example}\label{level-edna-example}}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Current application
+\item
+  Next steps
+\item
+  Future research questions
+\item
+  Implications for broader ecological literature.
+\end{enumerate}
+
+\hypertarget{acknowledgments}{%
+\section{Acknowledgments}\label{acknowledgments}}
+
+We thank the USGS Biological Threats and Invasive Species Program for
+funding as well as the Great Lakes Restoration Initiative. Any use of
+trade, firm, or product names is for descriptive purposes only and does
+not imply endorsement by the U.S. Government.
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Dorazio_2017}{}}%
+Dorazio, R.M. \& Erickson, R.A. (2018). {ednaoccupancy: An R package for
+multiscale occupancy modelling of environmental DNA data}.
+\emph{Molecular Ecology Resources}, \textbf{18}, 368--380. Retrieved
+from \url{https://doi.org/10.1111/1755-0998.12735}
+
+\leavevmode\vadjust pre{\hypertarget{ref-dorazio2005estimating}{}}%
+Dorazio, R.M. \& Royle, J.A. (2005a). Estimating size and composition of
+biological communities by modeling the occurrence of species.
+\emph{Journal of the American Statistical Association}, \textbf{100},
+389--398.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Dorazio_2005}{}}%
+Dorazio, R.M. \& Royle, J.A. (2005b). Estimating size and composition of
+biological communities by modeling the occurrence of species.
+\emph{Journal of the American Statistical Association}, \textbf{100},
+389--398. Retrieved from
+\url{https://doi.org/10.1198/016214505000000015}
+
+\leavevmode\vadjust pre{\hypertarget{ref-erickson2019sampling}{}}%
+Erickson, R.A., Merkes, C.M. \& Mize, E.L. (2019). Sampling designs for
+landscape-level eDNA monitoring programs. \emph{Integrated Environmental
+Assessment and Management}, \textbf{15}, 760--771.
+
+\leavevmode\vadjust pre{\hypertarget{ref-erickson2022fishstan}{}}%
+Erickson, R.A., Stich, D.S. \& Hebert, J.L. (2022). fishStan:
+Hierarchical bayesian models for fisheries. \emph{Journal of Open Source
+Software}, \textbf{7}, 3444.
+
+\leavevmode\vadjust pre{\hypertarget{ref-fishStan}{}}%
+Erickson, R.A., Stich, D.S. \& Hebert, J.L. (2020). \emph{fishStan:
+Hierarchical bayesian models for fisheries version 2.0}. U.S. Geological
+Survey software release, Reston, VA, https://doi.org/10.5066/P9TT3ILO.
+
+\leavevmode\vadjust pre{\hypertarget{ref-finney1952probit}{}}%
+Finney, D.J. (1952). \emph{Probit analysis: A statistical treatment of
+the sigmoid response curve}. Cambridge university press, Cambridge.
+
+\leavevmode\vadjust pre{\hypertarget{ref-cmdstanr}{}}%
+Gabry, J. \& Cesnovar, R. (2022). \emph{Cmdstanr: R interface to
+'CmdStan'}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-gelman2006data}{}}%
+Gelman, A. \& Hill, J. (2006). \emph{Data analysis using regression and
+multilevel/hierarchical models}. Cambridge university press.
+
+\leavevmode\vadjust pre{\hypertarget{ref-latimer2009hierarchical}{}}%
+Latimer, A., Banerjee, S., Sang Jr, H., Mosher, E. \& Silander Jr, J.
+(2009). Hierarchical models facilitate spatial analysis of large data
+sets: A case study on invasive plant species in the northeastern united
+states. \emph{Ecology letters}, \textbf{12}, 144--154.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Lewandowski_2009}{}}%
+Lewandowski, D., Kurowicka, D. \& Joe, H. (2009). Generating random
+correlation matrices based on vines and extended onion method.
+\emph{Journal of Multivariate Analysis}, \textbf{100}, 1989--2001.
+Retrieved from \url{https://doi.org/10.1016/j.jmva.2009.04.008}
+
+\leavevmode\vadjust pre{\hypertarget{ref-mackenzie2017occupancy}{}}%
+MacKenzie, D.I., Nichols, J.D., Royle, J.A., Pollock, K.H., Bailey, L.L.
+\& Hines, J.E. (2017). \emph{Occupancy estimation and modeling:
+Inferring patterns and dynamics of species occurrence}. Elsevier.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Mordecai_2011}{}}%
+Mordecai, R.S., Mattsson, B.J., Tzilkowski, C.J. \& Cooper, R.J. (2011).
+Addressing challenges when studying mobile or episodic species:
+Hierarchical bayes estimation of occupancy and use. \emph{Journal of
+Applied Ecology}, \textbf{48}, 56--66. Retrieved from
+\url{https://doi.org/10.1111/j.1365-2664.2010.01921.x}
+
+\leavevmode\vadjust pre{\hypertarget{ref-royle2008hierarchical}{}}%
+Royle, J.A. \& Dorazio, R.M. (2008). \emph{Hierarchical modeling and
+inference in ecology: The analysis of data from populations,
+metapopulations and communities}. Elsevier.
+
+\leavevmode\vadjust pre{\hypertarget{ref-rstan221}{}}%
+Stan Development Team. (2021). {RStan}: The {R} interface to {Stan}.
+Retrieved from \url{https://mc-stan.org/}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Stan_manual_2022}{}}%
+Stan Development Team. (2022). \emph{{Stan Modeling Language Users Guide
+and Reference Manual, version 2.29}}. Retrieved from
+\url{https://mc-stan.org}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Tobler_2019}{}}%
+Tobler, M.W., K'ery, M., Hui, F.K.C., Guillera-Arroita, G., Knaus, P. \&
+Sattler, T. (2019). Joint species distribution models with species
+correlations and imperfect detection. \emph{Ecology}, \textbf{100}.
+Retrieved from \url{https://doi.org/10.1002/ecy.2754}
+
+\end{CSLReferences}
+
+\end{document}
