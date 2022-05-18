@@ -4,6 +4,15 @@
 %
 \documentclass[
 ]{article}
+\title{Combining biology and statistical hierarchicies with occpuancy
+models to account for imperfect detection of single and multiple species
+with two- and three-level occpuancy models}
+\author{Richard A. Erickson, 0000-0003-4649-482X,
+\href{mailto:rerickson@usgs.gov}{\nolinkurl{rerickson@usgs.gov}} \and Barb
+A. Bennie \and Laura Pederman 0000-0001-6976-4138 \and Kevin's student
+for her data? \and Steven Spear \and Kevin Lafferty 0000-0001-7583-4593}
+\date{18 May 2022}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -42,6 +51,46 @@
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -83,18 +132,10 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \usepackage{setspace}\doublespacing \usepackage{lineno} \linenumbers
+\usepackage{subfig}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-
-\title{Combining biology and statistical hierarchicies with occpuancy
-models to account for imperfect detection of single and multiple species
-with two- and three-level occpuancy models}
-\author{Richard A. Erickson, 0000-0003-4649-482X,
-\href{mailto:rerickson@usgs.gov}{\nolinkurl{rerickson@usgs.gov}} \and Barb
-A. Bennie \and Laura Pederman 0000-0001-6976-4138 \and Kevin's student
-for her data? \and Steven Spear \and Kevin Lafferty 0000-0001-7583-4593}
-\date{10 May 2022}
 
 \begin{document}
 \maketitle
@@ -296,8 +337,25 @@ Y | z &\sim \textrm{Binomail}(k, z \times p)
 \mu_{p} & \sim V \delta
 \end{align}
 
+Using \(\mu_{\psi} \sim X \beta\) as an example, imagine that we fit an
+intercept for each specie's detection probability at a site. For
+example, the vector \(\beta\) looks like:
+\(\beta_\textrm{spp 1}, \beta_\textrm{spp 2}, \ldots \beta_\textrm{spp N}\).
+We can then fit a regression to each site \(i\), for example, let's say
+we have \(N\) sites:
+
+\begin{align}
+\mu_{\psi_{1}} & \sim X_{1} \beta_{1} \\
+\mu_{\psi_{2}} & \sim X_{2} \beta_{2} \\
+\mu_{\psi_{3}} & \sim X_{3} \beta_{3} \\
+\vdots
+\mu_{\psi_{N}} & \sim X_{N} \beta_{N}
+\end{align}
+
 \begin{itemize}
 \tightlist
+\item
+  We can then model the regression coefficients
 \item
   We can assume both \(\beta\) and \(\delta\) come from a multivariate
   normal distribution:
@@ -308,6 +366,9 @@ Y | z &\sim \textrm{Binomail}(k, z \times p)
   crossed with the statistical hierarchy).
 \item
   \(\Sigma\) are correlated error terms
+\item
+  Because each term coefficient is specices intercept, the correlation
+  between these is the species' correlation across sites.
 \end{itemize}
 
 \begin{align}
@@ -794,6 +855,38 @@ model}\label{example-applications-of-model}}
 
 \hypertarget{level-simulated-data}{%
 \subsection{2-level simulated data}\label{level-simulated-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"sim\_example\_figures/known\_spp\_matrix.jpg"}\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"sim\_example\_figures/omega\_psi\_plot.jpg"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \subfloat[Simulated (known) correlations\label{fig:unnamed-chunk-2-1}]{\includegraphics[width=0.5\linewidth]{sim_example_figures/known_spp_matrix} }\subfloat[Estimated correlations\label{fig:unnamed-chunk-2-2}]{\includegraphics[width=0.5\linewidth]{sim_example_figures/omega_psi_plot} }
+
+}
+
+\caption{Species-level occpuancy correlations .}\label{fig:unnamed-chunk-2}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"sim\_example\_figures/known\_detection\_matrix.jpg"}\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"sim\_example\_figures/omega\_p\_plot.jpg"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \subfloat[Simulated (known) detection correlations\label{fig:unnamed-chunk-3-1}]{\includegraphics[width=0.5\linewidth]{sim_example_figures/known_detection_matrix} }\subfloat[Estimated correlations\label{fig:unnamed-chunk-3-2}]{\includegraphics[width=0.5\linewidth]{sim_example_figures/omega_p_plot} }
+
+}
+
+\caption{Detection probability correlations .}\label{fig:unnamed-chunk-3}
+\end{figure}
 
 \hypertarget{level-bird-example}{%
 \subsection{2-level bird example}\label{level-bird-example}}

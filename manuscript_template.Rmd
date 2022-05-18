@@ -13,6 +13,7 @@ output:
     fig_caption: yes
     keep_tex: yes
     number_sections: yes
+    extra_dependencies: "subfig"
   html_document:
     fig_caption: yes
     force_captions: yes
@@ -136,9 +137,24 @@ Y | z &\sim \textrm{Binomail}(k, z \times p)
 \mu_{p} & \sim V \delta
 \end{align}
 ```
--   We can assume both $\beta$ and $\delta$ come from a multivariate normal distribution:
--   Hierarchical model, adapting notation of @Stan_manual_2022 to use use a star symbol ($^\star$) for the second level hierarchy avoid confusion with too many parameters (i.e., the biology hierarchy crossed with the statistical hierarchy).
--   $\Sigma$ are correlated error terms
+
+Using $\mu_{\psi} \sim X \beta$ as an example, imagine that we fit an intercept for each specie's detection probability at a site.
+For example, the vector $\beta$ looks like: $\beta_\textrm{spp 1}, \beta_\textrm{spp 2}, \ldots \beta_\textrm{spp N}$.
+We can then fit a regression to each site $i$, for example, let's say we have $N$ sites:
+
+\begin{align}
+\mu_{\psi_{1}} & \sim X_{1} \beta_{1} \\
+\mu_{\psi_{2}} & \sim X_{2} \beta_{2} \\
+\mu_{\psi_{3}} & \sim X_{3} \beta_{3} \\
+\vdots
+\mu_{\psi_{N}} & \sim X_{N} \beta_{N}
+\end{align}
+
+- We can then model the regression coefficients
+- We can assume both $\beta$ and $\delta$ come from a multivariate normal distribution:
+- Hierarchical model, adapting notation of @Stan_manual_2022 to use use a star symbol ($^\star$) for the second level hierarchy avoid confusion with too many parameters (i.e., the biology hierarchy crossed with the statistical hierarchy).
+- $\Sigma$ are correlated error terms
+- Because each term coefficient is specices intercept, the correlation between these is the species' correlation across sites.
 
 ```{=tex}
 \begin{align}
@@ -442,6 +458,18 @@ Notes about indexing
 # Example applications of model
 
 ## 2-level simulated data
+
+```{r, fig.ncol = 2, out.width="50%", fig.align = "center", fig.cap="Species-level occpuancy correlations .", fig.subcap=c("Simulated (known) correlations", "Estimated correlations")}
+knitr::include_graphics("sim_example_figures/known_spp_matrix.jpg")
+knitr::include_graphics("sim_example_figures/omega_psi_plot.jpg")
+```
+
+
+
+```{r, fig.ncol = 2, out.width="50%", fig.align = "center", fig.cap="Detection probability correlations .", fig.subcap=c("Simulated (known) detection correlations", "Estimated correlations")}
+knitr::include_graphics("sim_example_figures/known_detection_matrix.jpg")
+knitr::include_graphics("sim_example_figures/omega_p_plot.jpg")
+```
 
 ## 2-level bird example
 
